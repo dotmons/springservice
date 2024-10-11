@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class KafkaProducer {
 
+
     private KafkaTopicConfig kafkaTopicConfig;
     KafkaTemplate<String, String> kafkaTemplate;
 
