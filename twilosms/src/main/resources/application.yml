@@ -13,8 +13,8 @@ eureka:
     enabled: true
 
 twilio:
-  account_sid: AC6c181a387b2569b47ee541375364aa50
-  auth_token: f0eb397d8a7a3b262b4e9959ee247004
+  account_sid:
+  auth_token:
   from_number: 18647743796
 
 
