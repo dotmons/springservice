@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: kafkasms
+  kafka:
+    bootstrap-servers: localhost:29092
+server:
+  port: 8498
+
+
+kafkasms:
+  topicbuilder: dotmonsservice
+  groupid: dotmonskafka

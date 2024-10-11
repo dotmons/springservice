@@ -19,15 +19,8 @@ public class FraudCheckController {
     @GetMapping(path="{customerId}")
     public FraudCheckResponse isFraudCheck
             (@PathVariable("customerId") Integer customerId){
-        log.info("Loading FruadCheckResponse");
+        log.info("Checking Fruad CheckResponse for customer id {}", customerId);
         boolean isFradulentCustomer = fraudCheckService.isFraudulentCustomer(customerId);
         return new FraudCheckResponse(isFradulentCustomer);
     }
-
-    @PostMapping(path="hello")
-    public String testController(){
-        return "Test";
-    }
-
-
 }

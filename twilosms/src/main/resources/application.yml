@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: TwilloSms
+server:
+  port: 8444
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+    enabled: true
+
+twilio:
+  account_sid: AC6c181a387b2569b47ee541375364aa50
+  auth_token: f0eb397d8a7a3b262b4e9959ee247004
+  from_number: 18647743796
+
+
+smsmq:
+  queuename: sms_queue
+  exchangename: sms_exchange
+  routingkey: rabbit_key
