@@ -1,5 +1,7 @@
 package com.dotmonsservice.customer.service;
 
+import com.dotmonsservice.customer.config.ConstantValues;
+import com.dotmonsservice.customer.config.CustomerConfig;
 import com.dotmonsservice.customer.model.Customer;
 import com.dotmonsservice.customer.dto.CustomerRepository;
 import com.dotmonsservice.customer.model.FraudCheckResponse;
@@ -17,10 +19,12 @@ import java.util.Objects;
 public class CustomerService {
     CustomerRepository customerRepository;
     private final RestTemplate restTemplate;
+    private final CustomerConfig customerConfig;
 
-    public CustomerService(CustomerRepository customerRepository, RestTemplate restTemplate) {
+    public CustomerService(CustomerRepository customerRepository, RestTemplate restTemplate, CustomerConfig customerConfig) {
         this.customerRepository = customerRepository;
         this.restTemplate = restTemplate;
+        this.customerConfig = customerConfig;
     }
 
     public void registerCustomer(Customer customerRegistrationRequest) {
@@ -46,19 +50,27 @@ public class CustomerService {
                 restTemplate.getForObject("http://FRAUD/api/v1/fraud-check/{customerId}",
                         FraudCheckResponse.class, customer.getId());
 
+        // To send SMS directly to twillo REST API
         //TwilloResponse twilloResponse = restTemplate.postForObject("http://TWILLOSMS/api/v1/smstwillo", request, TwilloResponse.class);
 
-        // Send message to the queue
-        String messageSmsQueue = restTemplate.postForObject("http://SMSRABBITMQ/api/v1/smspublisher", request, String.class);
+        String messageSmsQueue = "";
+
+        if (customerConfig.getQueueType().equals(ConstantValues.KAFKA_QUEUE)){
+            // Send message to the KAFKA which sends SMS to twillo
+            messageSmsQueue = restTemplate.postForObject("http://KAFKASMS/api/v1/sendsmstokafka", request, String.class);
+            log.info("Message sent to kafka queue, {}", messageSmsQueue);
+        }
+        else if (customerConfig.getQueueType().equals(ConstantValues.RABBIT_QUEUE)){
+            // Send message to the RabbitMQ which sends SMS to twillo
+            messageSmsQueue = restTemplate.postForObject("http://SMSRABBITMQ/api/v1/smspublisher", request, String.class);
+            log.info("Message sent to rabbit queue, {}", messageSmsQueue);
+        }
+
+
+
 
         if (fraudCheckResponse.isFradster()) {
             throw new IllegalStateException("Fraudster found");
-        }
-        if (Objects.nonNull(messageSmsQueue)){
-            log.info("Message sent to SMS queue");
-        }
-        else{
-            throw new IllegalStateException("Message not sent");
         }
 
 

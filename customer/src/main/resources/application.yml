@@ -28,3 +28,7 @@ management:
     web:
       exposure:
         include: "*"
+
+#The two queue types are kafka_queue or rabbit_queue. Any selected option works below
+queue:
+  queuetype: kafka_queue
