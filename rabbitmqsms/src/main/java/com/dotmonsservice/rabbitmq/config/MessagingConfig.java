@@ -46,4 +46,6 @@ public class MessagingConfig {
         rabbitTemplate.setMessageConverter(messageConverter());
         return rabbitTemplate;
     }
+
+
 }

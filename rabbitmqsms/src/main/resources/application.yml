@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: SmsRabbitMq
+
+server:
+  port: 8445
+
+
+  #actuator
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+    enabled: true
+
+  #actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: RabbitMQSms
+    description: To send messages to rabbit MQ to be consumed by Twilo SMS service
+    version: 1.0.0
+
+smsmq:
+  queuename: sms_queue
+  exchangename: sms_exchange
+  routingkey: rabbit_key
+
+

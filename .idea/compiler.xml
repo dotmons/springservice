@@ -12,14 +12,15 @@
         <outputRelativeToContentRoot value="true" />
         <module name="twilosms" />
         <module name="kafkasms" />
-        <module name="smsrabbitmq" />
         <module name="eureka-server" />
+        <module name="rabbitmqsms" />
         <module name="fraud" />
         <module name="customer" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Customer" target="17" />
+      <module name="dotmonsservices" target="1.5" />
       <module name="untitled" target="17" />
     </bytecodeTargetLevel>
   </component>

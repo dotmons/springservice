@@ -28,7 +28,10 @@ public class CustomerService {
         Customer customer = Customer.builder()
                 .lastName(customerRegistrationRequest.getLastName())
                 .firstName(customerRegistrationRequest.getFirstName())
-                .email(customerRegistrationRequest.getEmail()).build();
+                .email(customerRegistrationRequest.getEmail())
+                .message(customerRegistrationRequest.getMessage())
+                .phoneNumber(customerRegistrationRequest.getPhoneNumber())
+                .build();
 
         String phoneNumber = customerRegistrationRequest.getPhoneNumber();
         String message = customerRegistrationRequest.getMessage();
@@ -42,9 +45,8 @@ public class CustomerService {
         FraudCheckResponse fraudCheckResponse =
                 restTemplate.getForObject("http://FRAUD/api/v1/fraud-check/{customerId}",
                         FraudCheckResponse.class, customer.getId());
-//
-//        TwilloResponse twilloResponse =
-//                restTemplate.postForObject("http://TWILLOSMS/api/v1/smstwillo", request, TwilloResponse.class);
+
+        //TwilloResponse twilloResponse = restTemplate.postForObject("http://TWILLOSMS/api/v1/smstwillo", request, TwilloResponse.class);
 
         // Send message to the queue
         String messageSmsQueue = restTemplate.postForObject("http://SMSRABBITMQ/api/v1/smspublisher", request, String.class);
@@ -58,6 +60,8 @@ public class CustomerService {
         else{
             throw new IllegalStateException("Message not sent");
         }
+
+
 //        if (!twilloResponse.success()) {
 //            log.error("Error message with status as {}", twilloResponse.message());
 //            throw new IllegalStateException("Error sending SMS to user ");

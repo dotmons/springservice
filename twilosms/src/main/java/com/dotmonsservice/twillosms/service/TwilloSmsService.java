@@ -1,6 +1,5 @@
 package com.dotmonsservice.twillosms.service;
 
-import com.dotmonsservice.twillosms.config.MessageQueueConfig;
 import com.dotmonsservice.twillosms.config.TwilioConfiguration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -37,19 +36,19 @@ public class TwilloSmsService {
         return messages.getStatus().toString();
     }
 
-    @RabbitListener(queues = "${smsmq.queuename}")
-    public void consumeMessageFromQueue(String message) throws JsonProcessingException {
-
-        log.info("Message received: with phoneNumber as {}", message);
-        // Create ObjectMapper instance
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonNode = objectMapper.readTree(message);
-
-        // Extract phoneNumber and message
-        String phoneNumber = jsonNode.get("phoneNumber").asText();
-        String messageValue = jsonNode.get("message").asText();
-
-        // Pausing SMS sending
-        //sendSmsNow(phoneNumber, messageValue);
-    }
+//    @RabbitListener(queues = "${smsmq.queuename}")
+//    public void consumeMessageFromQueue(String message) throws JsonProcessingException {
+//
+//        log.info("Message received: with phoneNumber as {}", message);
+//        // Create ObjectMapper instance
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        JsonNode jsonNode = objectMapper.readTree(message);
+//
+//        // Extract phoneNumber and message
+//        String phoneNumber = jsonNode.get("phoneNumber").asText();
+//        String messageValue = jsonNode.get("message").asText();
+//
+//        // Pausing SMS sending
+//        //sendSmsNow(phoneNumber, messageValue);
+//    }
 }

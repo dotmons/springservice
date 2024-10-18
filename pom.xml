@@ -15,7 +15,7 @@
     <module>fraud</module>
     <module>eureka-server</module>
     <module>twilosms</module>
-    <module>smsrabbitmq</module>
+    <module>rabbitmqsms</module>
       <module>kafkasms</module>
   </modules>
 

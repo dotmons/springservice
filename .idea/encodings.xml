@@ -9,8 +9,8 @@
     <file url="file://$PROJECT_DIR$/fraud/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kafkasms/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kafkasms/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/smsrabbitmq/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/smsrabbitmq/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rabbitmqsms/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rabbitmqsms/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/twilosms/src/main/java" charset="UTF-8" />
