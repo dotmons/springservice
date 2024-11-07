@@ -1,8 +1,10 @@
 package com.dotmonsservice.kafkasms.service;
 
 import com.dotmonsservice.kafkasms.dto.TwilloResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -44,7 +46,7 @@ public class KafkaConsumerService {
                 }
             }
         }
-        catch (Exception e){
+        catch (JSONException e){
             e.printStackTrace();
         }
     }

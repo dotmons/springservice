@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Slf4j
 @AllArgsConstructor
 @Service
@@ -16,10 +18,12 @@ public class KafkaProducerService {
     private KafkaTopicConfig kafkaTopicConfig;
     private KafkaTemplate<String, Smsbody> kafkaTemplate;
 
-    @Bean
     public boolean sendSms(Smsbody smsbody) {
         try {
-            kafkaTemplate.send(kafkaTopicConfig.getTopicBuilder(), smsbody);
+            if (Objects.nonNull(smsbody.getMessage()) && Objects.nonNull(smsbody.getPhoneNumber()))
+            {
+                kafkaTemplate.send(kafkaTopicConfig.getTopicBuilder(), smsbody);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;
