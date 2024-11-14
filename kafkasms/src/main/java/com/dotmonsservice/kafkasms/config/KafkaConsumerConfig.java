@@ -49,6 +49,8 @@ public class KafkaConsumerConfig {
         factory.setConsumerFactory(consumerFactory());
         factory.setCommonErrorHandler(defaultErrorHandler());
 
+
+
         // Use this or uncomment the line below to filter out records not matching the requirements below
         // This is not sent to the listener class
         factory.setRecordFilterStrategy(new KafkaRecordFilterFactory());

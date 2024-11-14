@@ -16,6 +16,6 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic dotmonsServiceTopic() {
-        return TopicBuilder.name(topicBuilder).build();
+        return TopicBuilder.name(topicBuilder).replicas(3).build();
     }
 }
