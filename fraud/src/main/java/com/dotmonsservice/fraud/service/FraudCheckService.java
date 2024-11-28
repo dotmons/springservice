@@ -24,7 +24,12 @@ public class FraudCheckService {
                 .createdDateTime(LocalDateTime.now())
                 .build();
 
-        fraudCheckHistoryRepository.save(fraudCheckHistory);
+       try {
+           fraudCheckHistoryRepository.save(fraudCheckHistory);
+       }
+       catch (Exception e) {
+           return false;
+       }
         return false;
     }
 }
