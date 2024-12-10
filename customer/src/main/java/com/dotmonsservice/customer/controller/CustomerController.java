@@ -3,10 +3,14 @@ package com.dotmonsservice.customer.controller;
 import com.dotmonsservice.customer.model.Customer;
 import com.dotmonsservice.customer.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.List;
 
 
 @Slf4j
@@ -21,8 +25,35 @@ public class CustomerController {
     }
 
     @PostMapping
-    public void registerCustomer(@RequestBody Customer customerRegistrationRequest) {
-        log.info("New Customer Registeration details {} " + customerRegistrationRequest);
-        customerService.registerCustomer(customerRegistrationRequest);
+    public ResponseEntity<String> registerCustomer(@RequestBody Customer customerRegistrationRequest) {
+        log.info("New Customer Registration details {} ", customerRegistrationRequest);
+        try {
+            customerService.registerCustomer(customerRegistrationRequest);
+            return ResponseEntity.ok(customerService.registerCustomer(customerRegistrationRequest));
+        }
+        catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping()
+    public Page<Customer> getAllCustomers(@PageableDefault(size = 3, sort = "lastName") Pageable pageable) {
+
+            return customerService.getCustomers(pageable);
+
+//        try{
+//            List<Customer> customerList = customerService.getCustomers();
+//            if (customerList.isEmpty()) {
+//                log.info("No customers found");
+//                return ResponseEntity.noContent().build();
+//            }
+//            log.info("Found {} customers", customerList.size());
+//            return ResponseEntity.ok(customerList);
+//        }
+//        catch (Exception e){
+//            log.error(e.getMessage());
+//            return ResponseEntity.status(500).body(Collections.emptyList());
+//        }
+
     }
 }
