@@ -2,8 +2,9 @@ package com.dotmonsservice.customer.service;
 
 import com.dotmonsservice.customer.config.ConstantValues;
 import com.dotmonsservice.customer.config.CustomerConfig;
+import com.dotmonsservice.customer.dto.CustomerDTO;
 import com.dotmonsservice.customer.model.Customer;
-import com.dotmonsservice.customer.dto.CustomerRepository;
+import com.dotmonsservice.customer.repository.CustomerRepository;
 import com.dotmonsservice.customer.model.FraudCheckResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -37,7 +38,7 @@ public class CustomerService {
     }
 
 
-    public String registerCustomer(Customer customerRegistrationRequest) {
+    public String registerCustomer(CustomerDTO customerRegistrationRequest) {
 
         try {
             Customer customer = Customer.builder()

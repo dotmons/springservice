@@ -1,4 +1,4 @@
-package com.dotmonsservice.customer.dto;
+package com.dotmonsservice.customer.repository;
 
 import com.dotmonsservice.customer.model.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;

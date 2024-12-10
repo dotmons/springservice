@@ -1,5 +1,6 @@
 package com.dotmonsservice.customer.controller;
 
+import com.dotmonsservice.customer.dto.CustomerDTO;
 import com.dotmonsservice.customer.model.Customer;
 import com.dotmonsservice.customer.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registerCustomer(@RequestBody Customer customerRegistrationRequest) {
+    public ResponseEntity<String> registerCustomer(@RequestBody CustomerDTO customerRegistrationRequest) {
         log.info("New Customer Registration details {} ", customerRegistrationRequest);
         try {
             customerService.registerCustomer(customerRegistrationRequest);
