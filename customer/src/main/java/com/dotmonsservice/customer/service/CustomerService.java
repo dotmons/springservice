@@ -1,46 +1,64 @@
 package com.dotmonsservice.customer.service;
 
 import com.dotmonsservice.customer.config.ConstantValues;
-import com.dotmonsservice.customer.config.CustomerConfig;
+import com.dotmonsservice.customer.config.CustomerQueueConfig;
+import com.dotmonsservice.customer.config.CustomerUriConfig;
 import com.dotmonsservice.customer.dto.CustomerDTO;
+import com.dotmonsservice.customer.exception.BadRequestException;
+import com.dotmonsservice.customer.exception.CustomerServiceException;
 import com.dotmonsservice.customer.model.Customer;
 import com.dotmonsservice.customer.repository.CustomerRepository;
 import com.dotmonsservice.customer.model.FraudCheckResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
 public class CustomerService {
     CustomerRepository customerRepository;
     private final RestTemplate restTemplate;
-    private final CustomerConfig customerConfig;
+    private final CustomerQueueConfig customerConfig;
+    private final CustomerUriConfig customerUriConfig;
 
-    public CustomerService(CustomerRepository customerRepository, RestTemplate restTemplate, CustomerConfig customerConfig) {
+    public CustomerService(CustomerRepository customerRepository, RestTemplate restTemplate, CustomerQueueConfig customerConfig, CustomerUriConfig customerUriConfig) {
         this.customerRepository = customerRepository;
         this.restTemplate = restTemplate;
         this.customerConfig = customerConfig;
+        this.customerUriConfig = customerUriConfig;
     }
 
-    public List<Customer> getCustomers() {
+    public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
     }
 
-    public Page<Customer> getCustomers(Pageable pageable) {
-        return customerRepository.findAll(pageable);
+    @Cacheable(value = "AllProducts")
+    public Page<CustomerDTO> getAllCustomers(Pageable pageable) {
+        return customerRepository.findAll(pageable).map(customer -> CustomerDTO
+                .builder()
+                .message(customer.getMessage())
+                .lastName(customer.getLastName())
+                .phoneNumber(customer.getPhoneNumber())
+                .email(customer.getEmail())
+                .firstName(customer.getFirstName())
+                .build());
     }
 
 
+    @Transactional
     public String registerCustomer(CustomerDTO customerRegistrationRequest) {
 
         try {
+
+            if ((Objects.isNull(customerRegistrationRequest.getLastName())) || (Objects.isNull(customerRegistrationRequest.getFirstName()))) {
+                throw new BadRequestException("LastName or FirstName is required");
+            }
             Customer customer = Customer.builder()
                     .lastName(customerRegistrationRequest.getLastName())
                     .firstName(customerRegistrationRequest.getFirstName())
@@ -58,9 +76,9 @@ public class CustomerService {
 
             customerRepository.saveAndFlush(customer);
 
-            FraudCheckResponse fraudCheckResponse =
-                    restTemplate.getForObject("http://FRAUD/api/v1/fraud-check/{customerId}",
-                            FraudCheckResponse.class, customer.getId());
+            Optional<FraudCheckResponse> fraudCheckResponse =
+                    Optional.ofNullable(restTemplate.getForObject(customerUriConfig.getFrauduri() + "{customerId}",
+                            FraudCheckResponse.class, customer.getId()));
 
             // To send SMS directly to twillo REST API
             //TwilloResponse twilloResponse = restTemplate.postForObject("http://TWILLOSMS/api/v1/smstwillo", request, TwilloResponse.class);
@@ -69,32 +87,25 @@ public class CustomerService {
 
             if (customerConfig.getQueueType().equals(ConstantValues.KAFKA_QUEUE)) {
                 // Send message to the KAFKA which sends SMS to twillo
-                messageSmsQueue = restTemplate.postForObject("http://KAFKASMS/api/v1/sendsmstokafka", request, String.class);
+                log.info("Kafka URI {} " , customerUriConfig.getKafkauri());
+                messageSmsQueue = restTemplate.postForObject(customerUriConfig.getKafkauri(), request, String.class);
                 log.info("Message sent to kafka queue, {}", messageSmsQueue);
             } else if (customerConfig.getQueueType().equals(ConstantValues.RABBIT_QUEUE)) {
                 // Send message to the RabbitMQ which sends SMS to twillo
-                messageSmsQueue = restTemplate.postForObject("http://SMSRABBITMQ/api/v1/smspublisher", request, String.class);
+                messageSmsQueue = restTemplate.postForObject(customerUriConfig.getRabbituri(), request, String.class);
                 log.info("Message sent to rabbit queue, {}", messageSmsQueue);
             }
 
 
-            if (fraudCheckResponse.isFradster()) {
+
+            if (fraudCheckResponse.isPresent() && fraudCheckResponse.get().isFradster()) {
                 throw new IllegalStateException("Fraudster found");
             }
 
-
-//        if (!twilloResponse.success()) {
-//            log.error("Error message with status as {}", twilloResponse.message());
-//            throw new IllegalStateException("Error sending SMS to user ");
-//        }
-//        else{
-//            log.info("Success sending SMS to user with status as {} ", twilloResponse.message());
-//        }
-
         }
-        catch (IllegalStateException e) {
-            log.error(e.getMessage());
-            return e.getMessage();
+
+        catch (CustomerServiceException e) {
+            throw new CustomerServiceException(e.getMessage());
         }
         return "Customer registered successfully";
     }

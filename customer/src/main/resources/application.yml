@@ -32,3 +32,9 @@ management:
 #The two queue types are kafka_queue or rabbit_queue. Any selected option works below
 queue:
   queuetype: kafka_queue
+
+#End points:
+customeruri:
+  kafkauri: http://KAFKASMS/api/v1/sendsmstokafka
+  rabbituri: http://SMSRABBITMQ/api/v1/smspublisher
+  frauduri: http://FRAUD/api/v1/fraud-check/

@@ -10,9 +10,11 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 @ConfigurationProperties("queue")
 @Data
-public class CustomerConfig {
+public class CustomerQueueConfig {
 
     private String queueType;
+
+
     @Bean
     @LoadBalanced
     public RestTemplate restTemplate(){
