@@ -26,30 +26,12 @@ public class CustomerController {
     @PostMapping
     public ResponseEntity<String> registerCustomer(@RequestBody @Validated CustomerDTO customerRegistrationRequest) {
         log.info("New Customer Registration details {} ", customerRegistrationRequest);
-
         return ResponseEntity.ok(customerService.registerCustomer(customerRegistrationRequest));
-
-
     }
 
     @GetMapping()
-    public Page<CustomerDTO> getAllCustomers(@PageableDefault(size = 3, sort = "lastName") Pageable pageable) {
+    public Page<CustomerDTO> getAllCustomers(@PageableDefault(size = 10, sort = "lastName") Pageable pageable) {
 
         return customerService.getAllCustomers(pageable);
-
-//        try{
-//            List<Customer> customerList = customerService.getCustomers();
-//            if (customerList.isEmpty()) {
-//                log.info("No customers found");
-//                return ResponseEntity.noContent().build();
-//            }
-//            log.info("Found {} customers", customerList.size());
-//            return ResponseEntity.ok(customerList);
-//        }
-//        catch (Exception e){
-//            log.error(e.getMessage());
-//            return ResponseEntity.status(500).body(Collections.emptyList());
-//        }
-
     }
 }

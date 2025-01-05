@@ -27,7 +27,8 @@ public class CustomerService {
     private final CustomerQueueConfig customerConfig;
     private final CustomerUriConfig customerUriConfig;
 
-    public CustomerService(CustomerRepository customerRepository, RestTemplate restTemplate, CustomerQueueConfig customerConfig, CustomerUriConfig customerUriConfig) {
+    public CustomerService(CustomerRepository customerRepository, RestTemplate restTemplate,
+                           CustomerQueueConfig customerConfig, CustomerUriConfig customerUriConfig) {
         this.customerRepository = customerRepository;
         this.restTemplate = restTemplate;
         this.customerConfig = customerConfig;
@@ -56,7 +57,8 @@ public class CustomerService {
 
         try {
 
-            if ((Objects.isNull(customerRegistrationRequest.getLastName())) || (Objects.isNull(customerRegistrationRequest.getFirstName()))) {
+            if ((Objects.isNull(customerRegistrationRequest.getLastName())) ||
+                    (Objects.isNull(customerRegistrationRequest.getFirstName()))) {
                 throw new BadRequestException("LastName or FirstName is required");
             }
             Customer customer = Customer.builder()
@@ -80,14 +82,21 @@ public class CustomerService {
                     Optional.ofNullable(restTemplate.getForObject(customerUriConfig.getFrauduri() + "{customerId}",
                             FraudCheckResponse.class, customer.getId()));
 
-            // To send SMS directly to twillo REST API
-            //TwilloResponse twilloResponse = restTemplate.postForObject("http://TWILLOSMS/api/v1/smstwillo", request, TwilloResponse.class);
+
+//            Optional<FraudCheckResponse> fraudCheckResponses =
+//                    Optional.ofNullable(
+//                            restTemplate.getForObject(
+//                                    UriComponentsBuilder.fromHttpUrl(customerUriConfig.getFrauduri())
+//                                            .buildAndExpand(customer.getId()) // replaces {customerId} placeholder with actual value
+//                                            .toUriString(),
+//                                    FraudCheckResponse.class
+//                            )
+//                    );
 
             String messageSmsQueue = "";
 
             if (customerConfig.getQueueType().equals(ConstantValues.KAFKA_QUEUE)) {
                 // Send message to the KAFKA which sends SMS to twillo
-                log.info("Kafka URI {} " , customerUriConfig.getKafkauri());
                 messageSmsQueue = restTemplate.postForObject(customerUriConfig.getKafkauri(), request, String.class);
                 log.info("Message sent to kafka queue, {}", messageSmsQueue);
             } else if (customerConfig.getQueueType().equals(ConstantValues.RABBIT_QUEUE)) {
@@ -97,14 +106,11 @@ public class CustomerService {
             }
 
 
-
             if (fraudCheckResponse.isPresent() && fraudCheckResponse.get().isFradster()) {
                 throw new IllegalStateException("Fraudster found");
             }
 
-        }
-
-        catch (CustomerServiceException e) {
+        } catch (CustomerServiceException e) {
             throw new CustomerServiceException(e.getMessage());
         }
         return "Customer registered successfully";
