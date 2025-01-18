@@ -8,7 +8,7 @@ import com.dotmonsservice.customer.exception.BadRequestException;
 import com.dotmonsservice.customer.exception.CustomerServiceException;
 import com.dotmonsservice.customer.model.Customer;
 import com.dotmonsservice.customer.repository.CustomerRepository;
-import com.dotmonsservice.customer.model.FraudCheckResponse;
+import com.dotmonsservice.customer.dto.FraudCheckResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -21,7 +21,9 @@ import java.util.*;
 
 @Slf4j
 @Service
+//@Scope(value = "prototype")
 public class CustomerService {
+
     CustomerRepository customerRepository;
     private final RestTemplate restTemplate;
     private final CustomerQueueConfig customerConfig;
@@ -78,9 +80,9 @@ public class CustomerService {
 
             customerRepository.saveAndFlush(customer);
 
-            Optional<FraudCheckResponse> fraudCheckResponse =
+            Optional<FraudCheckResponseDTO> fraudCheckResponse =
                     Optional.ofNullable(restTemplate.getForObject(customerUriConfig.getFrauduri() + "{customerId}",
-                            FraudCheckResponse.class, customer.getId()));
+                            FraudCheckResponseDTO.class, customer.getId()));
 
 
 //            Optional<FraudCheckResponse> fraudCheckResponses =

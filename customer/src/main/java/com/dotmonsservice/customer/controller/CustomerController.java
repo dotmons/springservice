@@ -4,6 +4,8 @@ import com.dotmonsservice.customer.dto.CustomerDTO;
 import com.dotmonsservice.customer.exception.CustomerServiceException;
 import com.dotmonsservice.customer.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -19,6 +21,7 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
+    @Autowired
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
@@ -31,7 +34,6 @@ public class CustomerController {
 
     @GetMapping()
     public Page<CustomerDTO> getAllCustomers(@PageableDefault(size = 10, sort = "lastName") Pageable pageable) {
-
         return customerService.getAllCustomers(pageable);
     }
 }
