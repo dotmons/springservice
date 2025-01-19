@@ -24,7 +24,6 @@ public class UserLogin {
 
     @Column(nullable = false)
     private String password;
-    private String token;
     private String userrole;
 
 }

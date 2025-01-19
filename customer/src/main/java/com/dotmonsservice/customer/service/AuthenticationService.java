@@ -5,6 +5,7 @@ import com.dotmonsservice.customer.dto.CustomerDTO;
 import com.dotmonsservice.customer.dto.UserDetailsDto;
 import com.dotmonsservice.customer.model.UserLogin;
 import com.dotmonsservice.customer.repository.UserLoginRepository;
+import com.dotmonsservice.customer.security.JwtUtil;
 import com.dotmonsservice.customer.util.StatusEnum;
 import com.dotmonsservice.customer.util.TokenGenerator;
 import com.dotmonsservice.customer.util.UserRoleEnum;
@@ -24,19 +25,32 @@ import java.util.Objects;
 public class AuthenticationService {
 
     private UserDetailsDto userDetailsDto;
-    private UserLoginRepository userLoginRepository;
+    private final UserLoginRepository userLoginRepository;
+    private final JwtUtil jwtUtil;
 
-    public AuthenticationService(UserLoginRepository userLoginRepository) {
+
+    public AuthenticationService(UserLoginRepository userLoginRepository, JwtUtil jwtUtil) {
         this.userLoginRepository = userLoginRepository;
+        this.jwtUtil = jwtUtil;
     }
 
     public UserDetailsDto getUserLoginDetails(HttpServletRequest request) {
 
-        if ((request.getHeader("Authorization") != null) && request.getHeader("Authorization").equals("valid-token")) {
-            userDetailsDto = UserDetailsDto.builder().username(request.getParameter("username"))
-                    .role("Admin").build();
-        } else {
-            log.info("Authorization header is empty");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        UserLogin userLogin = null;
+
+        if ((username != null) && (password != null)){
+            userLogin = userLoginRepository.findByUsernameAndPassword(username, TokenGenerator.passwordDecoder(password));
+            log.info("userLogin: {}", userLogin.getUsername());
+        }
+
+        // To generate JWT Token
+        if (userLogin.getId()!=null){
+           String token = jwtUtil.generateToken(userLogin.getUsername());
+           log.info("token: {}", token);
+           userDetailsDto = UserDetailsDto.builder().username(userLogin.getUsername())
+                   .token(token).build();
         }
         return userDetailsDto;
     }
@@ -46,13 +60,12 @@ public class AuthenticationService {
 
         UserLogin userLogin = UserLogin.builder().username(userDetailsDto.getUsername())
                 .password(TokenGenerator.passwordEncoder(userDetailsDto.getPassword()))
-                .token(TokenGenerator.generateToken())
                 .userrole(UserRoleEnum.fromUserType(userDetailsDto.getRole()).toString())
                 .build();
         UserLogin result = userLoginRepository.save(userLogin);
 
         return UserDetailsDto.builder().username(result.getUsername())
-                .token(result.getToken()).status(StatusEnum.REGISTERED.getStatus()).build();
+                .status(StatusEnum.REGISTERED.getStatus()).build();
     }
 
     @Override

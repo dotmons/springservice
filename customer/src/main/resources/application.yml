@@ -33,6 +33,9 @@ management:
 queue:
   queuetype: kafka_queue
 
+customer:
+  secretKey: dotmonstokenkeyvalue2348nr984rnf9lkjrkje9034923u4hfr8u3984ffd
+
 #End points:
 customeruri:
   kafkauri: http://KAFKASMS/api/v1/sendsmstokafka
