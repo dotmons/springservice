@@ -36,21 +36,27 @@ public class AuthenticationService {
 
     public UserDetailsDto getUserLoginDetails(HttpServletRequest request) {
 
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        String username = request.getHeader("username");
+        String password = request.getHeader("password");
+
         UserLogin userLogin = null;
 
-        if ((username != null) && (password != null)){
-            userLogin = userLoginRepository.findByUsernameAndPassword(username, TokenGenerator.passwordDecoder(password));
-            log.info("userLogin: {}", userLogin.getUsername());
-        }
+        if ((!Objects.isNull(username) && (!Objects.isNull(password)))) {
+            String encodedPassword = TokenGenerator.passwordEncoder(password);
 
-        // To generate JWT Token
-        if (userLogin.getId()!=null){
-           String token = jwtUtil.generateToken(userLogin.getUsername());
-           log.info("token: {}", token);
-           userDetailsDto = UserDetailsDto.builder().username(userLogin.getUsername())
-                   .token(token).build();
+            log.info("Username {} and password {}", username, encodedPassword);
+
+            userLogin = userLoginRepository.findByUsernameAndPassword(username, encodedPassword);
+            log.info("userLogin: {}", userLogin.getUsername());
+
+            // To generate JWT Token
+            if ((userLogin.getId() != null) && (userLogin.getPassword() != null) && userLogin.getPassword()
+                    .equals(TokenGenerator.passwordEncoder(password))) {
+                String token = jwtUtil.generateToken(userLogin.getUsername());
+                log.info("token: {}", token);
+                userDetailsDto = UserDetailsDto.builder().username(userLogin.getUsername())
+                        .token(token).build();
+            }
         }
         return userDetailsDto;
     }
@@ -65,7 +71,8 @@ public class AuthenticationService {
         UserLogin result = userLoginRepository.save(userLogin);
 
         return UserDetailsDto.builder().username(result.getUsername())
-                .status(StatusEnum.REGISTERED.getStatus()).build();
+                .status(StatusEnum.REGISTERED.getStatus())
+                .role(result.getUserrole()).build();
     }
 
     @Override

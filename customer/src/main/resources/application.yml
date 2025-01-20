@@ -35,6 +35,7 @@ queue:
 
 customer:
   secretKey: dotmonstokenkeyvalue2348nr984rnf9lkjrkje9034923u4hfr8u3984ffd
+  saltValue: $2a$10$abcdefghijklmnopqrstuv
 
 #End points:
 customeruri:
