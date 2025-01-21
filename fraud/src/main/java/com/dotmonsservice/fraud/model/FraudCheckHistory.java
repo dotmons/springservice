@@ -1,4 +1,4 @@
-package com.dotmonsservice.fraud;
+package com.dotmonsservice.fraud.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

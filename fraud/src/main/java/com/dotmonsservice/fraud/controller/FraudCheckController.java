@@ -1,6 +1,6 @@
 package com.dotmonsservice.fraud.controller;
 
-import com.dotmonsservice.fraud.FraudCheckResponse;
+import com.dotmonsservice.fraud.dto.FraudCheckResponseDto;
 import com.dotmonsservice.fraud.service.FraudCheckService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +17,12 @@ public class FraudCheckController {
         this.fraudCheckService = fraudCheckService;
     }
     @GetMapping(path="{customerId}")
-    public FraudCheckResponse isFraudCheck
+    public FraudCheckResponseDto isFraudCheck
             (@PathVariable("customerId") Integer customerId){
-        log.info("Checking Fruad CheckResponse for customer id {}", customerId);
+        log.info("Checking Fraud CheckResponse for customer id {}", customerId);
         boolean isFradulentCustomer = fraudCheckService.isFraudulentCustomer(customerId);
-        return new FraudCheckResponse(isFradulentCustomer);
+        return new FraudCheckResponseDto(isFradulentCustomer);
     }
+
+
 }

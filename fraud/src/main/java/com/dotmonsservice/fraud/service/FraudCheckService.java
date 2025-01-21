@@ -1,7 +1,7 @@
 package com.dotmonsservice.fraud.service;
 
-import com.dotmonsservice.fraud.FraudCheckHistory;
-import com.dotmonsservice.fraud.FraudCheckHistoryRepository;
+import com.dotmonsservice.fraud.model.FraudCheckHistory;
+import com.dotmonsservice.fraud.repository.FraudCheckHistoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

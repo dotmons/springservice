@@ -3,6 +3,8 @@ package com.dotmonsservice.customer.dto;
 import lombok.*;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class CustomerDTO {
 

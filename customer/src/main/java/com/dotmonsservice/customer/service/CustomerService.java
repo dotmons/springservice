@@ -10,6 +10,7 @@ import com.dotmonsservice.customer.model.Customer;
 import com.dotmonsservice.customer.repository.CustomerRepository;
 import com.dotmonsservice.customer.dto.FraudCheckResponseDTO;
 import com.dotmonsservice.customer.security.JwtUtil;
+import com.dotmonsservice.customer.util.GeneralUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -60,8 +61,8 @@ public class CustomerService {
 
         try {
 
-            if ((Objects.isNull(customerRegistrationRequest.getLastName())) ||
-                    (Objects.isNull(customerRegistrationRequest.getFirstName()))) {
+            if ((GeneralUtil.isNullOrEmpty(customerRegistrationRequest.getLastName())) ||
+                    (GeneralUtil.isNullOrEmpty(customerRegistrationRequest.getFirstName()))) {
                 throw new BadRequestException("LastName or FirstName is required");
             }
             Customer customer = Customer.builder()
@@ -85,6 +86,9 @@ public class CustomerService {
                     Optional.ofNullable(restTemplate.getForObject(customerUriConfig.getFrauduri() + "{customerId}",
                             FraudCheckResponseDTO.class, customer.getId()));
 
+            if (fraudCheckResponse.isPresent() && fraudCheckResponse.get().isFradster()) {
+                throw new IllegalStateException("Fraudster found");
+            }
 
 //            Optional<FraudCheckResponse> fraudCheckResponses =
 //                    Optional.ofNullable(
@@ -96,26 +100,23 @@ public class CustomerService {
 //                            )
 //                    );
 
-            String messageSmsQueue = "";
-
-            if (customerConfig.getQueueType().equals(ConstantValues.KAFKA_QUEUE)) {
-                // Send message to the KAFKA which sends SMS to twillo
-                messageSmsQueue = restTemplate.postForObject(customerUriConfig.getKafkauri(), request, String.class);
-                log.info("Message sent to kafka queue, {}", messageSmsQueue);
-            } else if (customerConfig.getQueueType().equals(ConstantValues.RABBIT_QUEUE)) {
-                // Send message to the RabbitMQ which sends SMS to twillo
-                messageSmsQueue = restTemplate.postForObject(customerUriConfig.getRabbituri(), request, String.class);
-                log.info("Message sent to rabbit queue, {}", messageSmsQueue);
-            }
 
 
-            if (fraudCheckResponse.isPresent() && fraudCheckResponse.get().isFradster()) {
-                throw new IllegalStateException("Fraudster found");
-            }
+            // Send message to queue
+            String messageSmsQueue = getMessageQueue(customerConfig.getQueueType(), request);
+            log.info("Message sent to queue, {}", messageSmsQueue);
 
         } catch (CustomerServiceException e) {
             throw new CustomerServiceException(e.getMessage());
         }
         return "Customer registered successfully";
+    }
+
+    String getMessageQueue(String queueType, Map<String, String> request){
+        return switch (queueType){
+            case ConstantValues.KAFKA_QUEUE -> restTemplate.postForObject(customerUriConfig.getKafkauri(), request, String.class);
+            case ConstantValues.RABBIT_QUEUE -> restTemplate.postForObject(customerUriConfig.getRabbituri(), request, String.class);
+            default -> throw new IllegalStateException("Queue type not found");
+        };
     }
 }
