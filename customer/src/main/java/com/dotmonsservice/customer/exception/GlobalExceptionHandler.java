@@ -26,6 +26,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<String> handleBadRequestException(BadRequestException ex) {
         log.error("Bad Request: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error with request. Error occurred, Name or Surname is missing:: ");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error with request. Error occurred, Name or Surname is missing");
     }
 }

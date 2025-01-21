@@ -1,6 +1,8 @@
 server:
   port: 8080
 spring:
+  thymeleaf:
+    cache: false #Spring boot dev tools
   application:
     name: customer
   datasource:
@@ -28,6 +30,12 @@ management:
     web:
       exposure:
         include: "*"
+  endpoint:
+    health:
+      show-details: always
+  info:
+    env:
+      enabled: true
 
 #The two queue types are kafka_queue or rabbit_queue. Any selected option works below
 queue:
@@ -42,3 +50,5 @@ customeruri:
   kafkauri: http://KAFKASMS/api/v1/sendsmstokafka
   rabbituri: http://SMSRABBITMQ/api/v1/smspublisher
   frauduri: http://FRAUD/api/v1/fraud-check/
+
+

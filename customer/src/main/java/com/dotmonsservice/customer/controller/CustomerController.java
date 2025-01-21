@@ -26,6 +26,7 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
+
     @PostMapping
     public ResponseEntity<String> registerCustomer(@RequestBody @Validated CustomerDTO customerRegistrationRequest) {
         log.info("New Customer Registration details {} ", customerRegistrationRequest);
@@ -36,4 +37,5 @@ public class CustomerController {
     public Page<CustomerDTO> getAllCustomers(@PageableDefault(size = 10, sort = "lastName") Pageable pageable) {
         return customerService.getAllCustomers(pageable);
     }
+
 }

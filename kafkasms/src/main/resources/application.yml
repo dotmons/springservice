@@ -10,3 +10,4 @@ server:
 kafkasms:
   topicbuilder: dotmonsservice
   groupid: dotmonskafka
+  uri: http://TWILLOSMS/api/v1/smstwillo

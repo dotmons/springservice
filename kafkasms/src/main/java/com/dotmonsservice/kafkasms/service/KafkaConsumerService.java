@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,10 +16,16 @@ import java.util.Objects;
 
 @Slf4j
 @Service
-@AllArgsConstructor
 public class KafkaConsumerService {
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
+
+    @Value("${kafkasms.uri}")
+    private String uri;
+
+    public KafkaConsumerService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     @org.springframework.kafka.annotation.KafkaListener(topics = "${kafkasms.topicbuilder}", groupId = "${kafkasms.groupid}")
     void listener(String data){
@@ -35,7 +43,7 @@ public class KafkaConsumerService {
                 requestHashMap.put("message", message);
 
                 TwilloResponse twilloResponse =
-                        restTemplate.postForObject("http://TWILLOSMS/api/v1/smstwillo", requestHashMap, TwilloResponse.class);
+                        restTemplate.postForObject(uri, requestHashMap, TwilloResponse.class);
 
                 if (Objects.nonNull(twilloResponse) && (twilloResponse.success())) {
                     log.info("Successfully posted to Twillo API");
