@@ -3,10 +3,12 @@ package com.dotmonsservice.fraud.service;
 import com.dotmonsservice.fraud.model.FraudCheckHistory;
 import com.dotmonsservice.fraud.repository.FraudCheckHistoryRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
 @Service
+@Transactional
 public class FraudCheckService {
 
     private final FraudCheckHistoryRepository fraudCheckHistoryRepository;

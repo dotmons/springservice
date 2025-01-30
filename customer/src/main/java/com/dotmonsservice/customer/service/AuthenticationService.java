@@ -22,6 +22,7 @@ import java.util.Objects;
 @Service
 //@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Slf4j
+@Transactional
 public class AuthenticationService {
 
     private UserDetailsDto userDetailsDto;

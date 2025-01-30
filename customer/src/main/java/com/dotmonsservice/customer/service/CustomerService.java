@@ -23,6 +23,7 @@ import java.util.*;
 
 @Slf4j
 @Service
+@Transactional
 //@Scope(value = "prototype")
 public class CustomerService {
 
