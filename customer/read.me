@@ -4,12 +4,20 @@ a postgres database running on port 5432
 To run the database here, lunch a client side database for postgres, and connect
 using the datasource in application.yml
 
+Implement this:
+1:
 password: password
 url: jdbc:postgresql://localhost:5432/postgres
 username: dotmonsscode
-
 Then run this command:
+
 create database customer;
+create database fraud;
+
+
+
+
+
 
 In application.yml file, user can select kafka_queue or rabbit_queue to define the
 queue type to be used and consumed by Twilo.
