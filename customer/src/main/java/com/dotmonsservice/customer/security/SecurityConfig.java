@@ -24,6 +24,7 @@ public class SecurityConfig{
         http.csrf(csrf -> csrf.disable()) // Explicitly disabling CSRF for stateless API
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/customers/auth/*").permitAll() // Allow unauthenticated access to auth endpoints
+                        .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated() // All other requests need authentication
                 )
                 .sessionManagement(session -> session

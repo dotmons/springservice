@@ -38,3 +38,14 @@ raw data: Ensure you fill in the details before running in postman and include c
     "phoneNumber": "",
     "message": ""
 }
+
+
+Added Prometheus to the metrics to read all API calls.
+Ensure to update the token below. After updating the token, you can curl this to get total calls made to the API
+using prometheus
+
+curl -s http://localhost:8080/actuator/prometheus \
+-H "Authorization: Bearer <token>" \
+| grep 'uri="/api/v1/customers"' \
+| grep 'status="200"' \
+| awk '{print $2}'

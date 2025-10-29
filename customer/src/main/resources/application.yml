@@ -36,6 +36,10 @@ management:
   info:
     env:
       enabled: true
+  # Adding Prometheus to the metrics
+  metrics:
+    tags:
+      application: customer-service
 
 #The two queue types are kafka_queue or rabbit_queue. Any selected option works below
 queue:
