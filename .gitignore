@@ -1,18 +1,90 @@
-# Ignore compiled class files
-
-**/target/
-**/out/
-
-# Ignore IntelliJ IDEA project files
-.idea/
+# ---------------------------------
+# Java & Spring Boot
+# ---------------------------------
+*.class
+*.war
+*.ear
+*.jar
 *.iml
+*.log
+*.out
 
-# Ignore Maven and Gradle build directories
-mvnw
-mvnw.cmd
-.gradle/
+# Maven / Gradle build directories
+target/
 build/
+!gradle/wrapper/gradle-wrapper.jar
 
-# Ignore logs and temp files
+# ---------------------------------
+# IDE Specific
+# ---------------------------------
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.ipr
+*.iml
+out/
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# VS Code
+.vscode/
+
+# NetBeans
+/nbproject/private/
+/build/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# ---------------------------------
+# OS / Environment Files
+# ---------------------------------
+.DS_Store
+Thumbs.db
+
+# ---------------------------------
+# Spring Boot specific
+# ---------------------------------
+# Application configuration
+application-*.yml
+application-*.yaml
+application-*.properties
+
+# If you want to commit a sample config, you can instead use:
+# !application-example.yml
+
+# ---------------------------------
+# Logs / Temp Files
+# ---------------------------------
 logs/
 *.log
+*.tmp
+*.swp
+*.swo
+
+# ---------------------------------
+# Docker / CI/CD
+# ---------------------------------
+docker-compose.override.yml
+.env
+*.pid
+
+# ---------------------------------
+# Testing
+# ---------------------------------
+test-output/
+*.lcov
+*.coverage
+*.coverage.json
+
+# ---------------------------------
+# Node / Frontend (if using React or Angular front-end inside project)
+# ---------------------------------
+node_modules/
+dist/

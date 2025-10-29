@@ -17,6 +17,7 @@
     <module>twilosms</module>
     <module>rabbitmqsms</module>
     <module>kafkasms</module>
+    <module>prometheus</module>
   </modules>
 
 

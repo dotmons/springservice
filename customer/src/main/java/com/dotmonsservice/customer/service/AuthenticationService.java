@@ -65,6 +65,8 @@ public class AuthenticationService {
     @Transactional
     public UserDetailsDto registerUserDetails(UserDetailsDto userDetailsDto) {
 
+        System.out.println("User Details: " + userDetailsDto);
+
         UserLogin userLogin = UserLogin.builder().username(userDetailsDto.getUsername())
                 .password(TokenGenerator.passwordEncoder(userDetailsDto.getPassword()))
                 .userrole(UserRoleEnum.fromUserType(userDetailsDto.getRole()).toString())

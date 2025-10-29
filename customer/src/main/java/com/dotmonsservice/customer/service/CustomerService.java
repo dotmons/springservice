@@ -9,7 +9,6 @@ import com.dotmonsservice.customer.exception.CustomerServiceException;
 import com.dotmonsservice.customer.model.Customer;
 import com.dotmonsservice.customer.repository.CustomerRepository;
 import com.dotmonsservice.customer.dto.FraudCheckResponseDTO;
-import com.dotmonsservice.customer.security.JwtUtil;
 import com.dotmonsservice.customer.util.GeneralUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
