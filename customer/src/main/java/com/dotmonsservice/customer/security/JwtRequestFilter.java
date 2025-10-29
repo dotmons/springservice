@@ -34,6 +34,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
        log.info("Filtering working...");
        try {
+
+           // Skip JWT filter for actuator
+           String path = request.getRequestURI();
+           if (path.startsWith("/actuator")) {
+               filterChain.doFilter(request, response);
+               return;
+           }
+
+
            final String authHeader = request.getHeader("Authorization");
            if (authHeader != null && authHeader.startsWith("Bearer ")) {
                final String token = authHeader.substring(7);
