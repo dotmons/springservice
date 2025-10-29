@@ -1,34 +1,35 @@
 services:
   postgres:
     container_name: postgres
-    image: postgres
+    image: postgres:14-alpine
     environment:
       POSTGRES_USER: dotmonsscode
       POSTGRES_PASSWORD: password
-      PGDATA: /data/postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
-      - postgres:/data/postgres
+      - ~/apps/postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
       - postgres
-    restart: unless-stopped
+    restart: no
 
-
-  postgres-fraud:
-    container_name: postgres-fraud
-    image: postgres
-    environment:
-      POSTGRES_USER: dotmonsscode
-      POSTGRES_PASSWORD: password
-      PGDATA: /data/postgresfraud
-    volumes:
-      - postgres:/data/postgresfraud
-    ports:
-      - "5430:5432"
-    networks:
-      - postgres
-    restart: unless-stopped
+#
+#  postgres-fraud:
+#    container_name: postgres-fraud
+#    image: postgres
+#    environment:
+#      POSTGRES_USER: dotmonsscode
+#      POSTGRES_PASSWORD: password
+#      PGDATA: /data/postgresfraud
+#      POSTGRES_HOST_AUTH_METHOD: trust
+#    volumes:
+#      - postgres:/data/postgresfraud
+#    ports:
+#      - "5430:5432"
+#    networks:
+#      - postgres
+#    restart: unless-stopped
 
 
   pgadmin:
@@ -81,6 +82,28 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - monitoring
+
+  # Optional: include your app here if you want to run it in the same network
+  # myapp:
+  #   build: .
+  #   ports:
+  #     - "8080:8080"
+  #   networks:
+  #     - monitoring
+
+
+
 networks:
   postgres:
     driver: bridge

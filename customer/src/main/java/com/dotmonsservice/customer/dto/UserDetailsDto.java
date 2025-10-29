@@ -18,11 +18,10 @@ import lombok.NoArgsConstructor;
 public class UserDetailsDto {
 
     private String username;
-
-    // To ignore this from being processed over the network
-    @JsonIgnore
     private String password;
     private String role;
+    // To ignore this from being processed over the network
+    //@JsonIgnore
     private String token;
     private String status;
 }

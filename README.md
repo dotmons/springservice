@@ -32,6 +32,7 @@ values(1,'$2a$10$abcdefghijklmnopqrstuu2njjerFUdKeNqVoGia/slSqhJQ.vuAy' 'usernam
 To login:
 1. Run in postman
 localhost:8080/api/v1/customers/auth/userLogin
+Add the header
 header:
     username: username1
     password: password1

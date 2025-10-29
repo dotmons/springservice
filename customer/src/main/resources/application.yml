@@ -39,7 +39,7 @@ management:
 
 #The two queue types are kafka_queue or rabbit_queue. Any selected option works below
 queue:
-  queuetype: kafka_queue
+  queuetype: rabbit_queue
 
 customer:
   secretKey: dotmonstokenkeyvalue2348nr984rnf9lkjrkje9034923u4hfr8u3984ffd
