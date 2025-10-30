@@ -5,9 +5,9 @@ server:
   port: 8444
 
 twilio:
-  account_sid: 1
-  auth_token: 1
-  from_number: 1
+  account_sid: AC6c181a387b2569b47ee541375364aa50
+  auth_token: 1a29b735968adddb69528fbced0c00d0
+  from_number: 18647743796
 
 
 smsmq:

@@ -83,27 +83,6 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
-
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    networks:
-      - monitoring
-
-  # Optional: include your app here if you want to run it in the same network
-  # myapp:
-  #   build: .
-  #   ports:
-  #     - "8080:8080"
-  #   networks:
-  #     - monitoring
-
-
-
 networks:
   postgres:
     driver: bridge
