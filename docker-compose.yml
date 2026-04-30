@@ -85,8 +85,10 @@ services:
 
 networks:
   postgres:
+    name: postgres
     driver: bridge
   spring:
+    name: spring
     driver: bridge
 
 volumes:

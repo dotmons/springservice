@@ -12,6 +12,38 @@ a postgres database running on port 5432
 To run the database here, lunch a client side database for postgres, and connect
 using the datasource in application.yml
 
+To start the application, ensure you have docker and maven on you system.
+
+i. Run from root: 
+docker-compose up -d
+
+ii. Run the following command to start all the services in this order:
+Ensure the eureka-server is started first (This is where all  API connection are held
+and other services are able to communicate using the endpoint from Eureka)
+
+mvn clean spring-boot:run -pl eureka-server
+mvn clean spring-boot:run -pl customer
+mvn clean spring-boot:run -pl fraud
+mvn clean spring-boot:run -pl kafkasms
+mvn clean spring-boot:run -pl rabbitmqsms
+mvn clean spring-boot:run -pl twilosms
+
+
+N.B: For twilosms/src/main/resources/application.yml:
+The config needs to be updated. You can register on twilio website for free to 
+get the following configuration used to send SMS.
+
+twilio:
+account_sid: 
+auth_token: 
+from_number: 
+
+With the docker running, you can access the pdadmin using:
+http://localhost:5050
+
+Add a new server using the credentials below:
+
+
 Implement this:
 1:
 password: password

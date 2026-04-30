@@ -17,7 +17,7 @@ create database fraud;
 
 After running the application for the first time, run this:
 insert into user_details_login(id, password, username, userrole)
-values(1,'$2a$10$abcdefghijklmnopqrstuu2njjerFUdKeNqVoGia/slSqhJQ.vuAy' 'username1', 1);
+values(1,'$2a$10$abcdefghijklmnopqrstuu2njjerFUdKeNqVoGia/slSqhJQ.vuAy', 'username1', 1);
 
 
 
