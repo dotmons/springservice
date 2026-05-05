@@ -1,11 +1,10 @@
 services:
-
   # ============================================================================
   # Service: Eureka Discovery Server
   # Description: Service Registry for microservices lookup and registration
   # ============================================================================
   eureka-server:
-    image: eureka-server:latest
+    image: sunky24/eureka-server:latest
     container_name: eureka-server
     ports:
       - "8761:8761"
@@ -137,7 +136,7 @@ services:
   # Description: Handles customer profiles; interacts with Postgres and Eureka
   # ============================================================================
   customer:
-    image: customer:latest
+    image: sunky24/customer-service:latest
     container_name: customer
     ports:
       - "8080:8080"
@@ -170,7 +169,7 @@ services:
   # Description: Checks for fraudulent activity; communicates via Eureka
   # ============================================================================
   fraud:
-    image: fraud:latest
+    image: sunky24/fraud-service:latest
     container_name: fraud
     ports:
       - "8081:8081"
@@ -314,7 +313,7 @@ services:
   #              the physical SMS delivery via external APIs (Twilio).
   # ============================================================================
   rabbitmq-sms:
-    image: rabbitmqsms:latest 
+    image: sunky24/rabbitmqsms-service:latest
     container_name: rabbitmq-sms
     ports:
       - "8445:8445" 
@@ -376,7 +375,7 @@ services:
   # Description: Background worker that consumes Kafka events to process SMS
   # ============================================================================
   kafka-sms:
-    image: kafkasms:latest
+    image: sunky24/kafkasms-service:latest
     container_name: kafka-sms
     environment:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
@@ -422,7 +421,7 @@ services:
   # Description: Gateway that interacts with Twilio API to send physical SMS
   # ============================================================================
   twilio-sms:
-    image: twilosms:latest
+    image: sunky24/twilosms-service:latest
     container_name: twilio-sms
     environment:
       # Messaging: Connectivity for both Kafka and RabbitMQ
